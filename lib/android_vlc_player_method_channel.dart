@@ -11,13 +11,13 @@ class MethodChannelAndroidVlcPlayer extends AndroidVlcPlayerPlatform {
 
   @override
   Future<bool?> startVLCPlayer({
-    required String filePath,
-    required String extension,
+    required String file,
+    required String mimeType,
     required String title,
   }) async {
     final success = await methodChannel.invokeMethod<bool>('startVLCPlayer', {
-      'filePath': filePath,
-      'extension': extension,
+      'file': file,
+      'mimeType': mimeType,
       'title': title,
     });
     return success;

@@ -26,8 +26,8 @@ class AndroidVlcPlayerPlugin : FlutterPlugin, MethodCallHandler {
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     when (call.method) {
       "startVLCPlayer" -> {
-        val filePath = call.argument<String>("filePath") ?: return result.error("InvalidArguments", "File path is null", null)
-        val extension = call.argument<String>("extension") ?: return result.error("InvalidArguments", "Extension is null", null)
+        val filePath = call.argument<String>("file") ?: return result.error("InvalidArguments", "File path is null", null)
+        val extension = call.argument<String>("mimeType") ?: return result.error("InvalidArguments", "Extension is null", null)
         val title = call.argument<String>("title") ?: return result.error("InvalidArguments", "Title is null", null)
         val success = playVideo(filePath, extension, title)
         result.success(success)
@@ -38,11 +38,11 @@ class AndroidVlcPlayerPlugin : FlutterPlugin, MethodCallHandler {
     }
   }
 
-  private fun playVideo(filePath: String, extension: String, title: String): Boolean {
-    val uri = Uri.parse(filePath)
+  private fun playVideo(file: String, mimeType: String, title: String): Boolean {
+    val uri = Uri.parse(file)
     val vlcIntent = Intent(Intent.ACTION_VIEW)
     vlcIntent.setPackage("org.videolan.vlc")
-    vlcIntent.setDataAndTypeAndNormalize(uri, extension)
+    vlcIntent.setDataAndTypeAndNormalize(uri, mimeType)
     vlcIntent.putExtra("title", title)
 
     try {

@@ -20,14 +20,14 @@ class _MyAppState extends State<MyApp> {
   bool _vlc = false;
 
   Future<void> vlc({
-    required String filePath,
-    required String extension,
+    required String file,
+    required String mimeType,
     required String title,
   }) async {
     bool vlc;
     try {
       vlc = await _androidVlcPlayerPlugin.startVLCPlayer(
-              filePath: filePath, extension: extension, title: title) ??
+              file: mimeType, mimeType: mimeType, title: title) ??
           false;
     } on PlatformException {
       vlc = false;
@@ -47,13 +47,15 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text('vlc: ${_vlc.toString()}\n'),
               ElevatedButton(
                 onPressed: () => vlc(
-                    filePath:
+                    file:
                         'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-                    extension: 'video/*',
+                    mimeType: 'video/*',
                     title: 'test'),
                 child: const Text("start video"),
               ),

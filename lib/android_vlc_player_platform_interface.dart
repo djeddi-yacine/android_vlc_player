@@ -38,8 +38,8 @@ abstract class AndroidVlcPlayerPlatform extends PlatformInterface {
   /// Throws an [UnimplementedError] if the platform-specific implementation
   /// doesn't override this method.
   Future<bool?> startVLCPlayer({
-    required String filePath,
-    required String extension,
+    required String file,
+    required String mimeType,
     required String title,
   }) {
     throw UnimplementedError('startVLCPlayer() has not been implemented.');

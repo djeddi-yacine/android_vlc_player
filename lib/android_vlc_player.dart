@@ -13,11 +13,11 @@ class AndroidVlcPlayer {
   ///
   /// Throws an [Exception] if an error occurs while starting the VLC player.
   Future<bool?> startVLCPlayer({
-    required String filePath,
-    required String extension,
+    required String file,
+    required String mimeType,
     required String title,
   }) {
     return AndroidVlcPlayerPlatform.instance
-        .startVLCPlayer(filePath: filePath, extension: extension, title: title);
+        .startVLCPlayer(file: file, mimeType: mimeType, title: title);
   }
 }
