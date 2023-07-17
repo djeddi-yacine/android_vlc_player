@@ -5,7 +5,28 @@ import 'package:flutter/services.dart';
 import 'package:android_vlc_player/android_vlc_player.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const App());
+}
+
+class App extends StatelessWidget {
+  const App({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
+      home: ScaffoldMessenger(
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('VLC Plugin Example'),
+          ),
+          body: const MyApp(),
+        ),
+      ),
+    );
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -17,7 +38,10 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _androidVlcPlayerPlugin = AndroidVlcPlayer();
-  bool _vlc = false;
+  bool? _vlc;
+  final TextEditingController _videoController = TextEditingController();
+  final TextEditingController _mimeController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
 
   Future<void> vlc({
     required String file,
@@ -27,7 +51,7 @@ class _MyAppState extends State<MyApp> {
     bool vlc;
     try {
       vlc = await _androidVlcPlayerPlugin.startVLCPlayer(
-              file: mimeType, mimeType: mimeType, title: title) ??
+              file: file, mimeType: mimeType, title: title) ??
           false;
     } on PlatformException {
       vlc = false;
@@ -39,25 +63,97 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _videoController.clear();
+    _mimeController.clear();
+    _titleController.clear();
+  }
+
+  @override
+  void dispose() {
+    _videoController.dispose();
+    _mimeController.dispose();
+    _titleController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
+    return Center(
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('vlc: ${_vlc.toString()}\n'),
+              Text('is VLC installed: ${_vlc.toString()}\n'),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: TextField(
+                  controller: _videoController,
+                  decoration: const InputDecoration(
+                    hintText: "Video Url",
+                    border: OutlineInputBorder(),
+                  ),
+                  onSubmitted: (url) {
+                    if (url.isNotEmpty) {
+                      _videoController.text = url;
+                    }
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: TextField(
+                  controller: _mimeController,
+                  decoration: const InputDecoration(
+                    hintText: "Mime Type",
+                    border: OutlineInputBorder(),
+                  ),
+                  onSubmitted: (mime) {
+                    if (mime.isNotEmpty) {
+                      _mimeController.text = mime;
+                    }
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: TextField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(
+                    hintText: "Title ",
+                    border: OutlineInputBorder(),
+                  ),
+                  onSubmitted: (title) {
+                    if (title.isNotEmpty) {
+                      _titleController.text = title;
+                    }
+                  },
+                ),
+              ),
               ElevatedButton(
-                onPressed: () => vlc(
-                    file:
-                        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-                    mimeType: 'video/*',
-                    title: 'test'),
-                child: const Text("start video"),
+                onPressed: () {
+                  if (_videoController.value.text.isNotEmpty &&
+                      _mimeController.value.text.isNotEmpty &&
+                      _titleController.value.text.isNotEmpty) {
+                    vlc(
+                      file: _videoController.value.text,
+                      mimeType: _mimeController.value.text,
+                      title: _titleController.value.text,
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Enter Video data To Start VLC"),
+                      ),
+                    );
+                  }
+                },
+                child: const Text("start VLC"),
               ),
             ],
           ),
@@ -66,3 +162,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
+//http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
+//video/*
+//test

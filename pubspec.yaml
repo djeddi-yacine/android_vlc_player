@@ -1,7 +1,23 @@
 name: android_vlc_player
 description: A new Flutter plugin to launch the vlc player from your android app.
-version: 0.0.1
-homepage:
+
+homepage: https://github.com/dj-yacine-flutter/android_vlc_player
+repository: https://github.com/dj-yacine-flutter/android_vlc_player
+issue_tracker: https://github.com/dj-yacine-flutter/android_vlc_player/issues
+version: 1.0.0
+
+topics:
+  - android
+  - video
+  - player
+  - vlc
+
+screenshots:
+  - description: Android TV.
+    path: screenshots/screenshot_01.png
+  - description: Android Phone.
+    path: screenshots/screenshot_02.png
+
 
 environment:
   sdk: '>=3.0.3 <4.0.0'
