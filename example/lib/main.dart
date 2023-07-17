@@ -51,7 +51,10 @@ class _MyAppState extends State<MyApp> {
     bool vlc;
     try {
       vlc = await _androidVlcPlayerPlugin.startVLCPlayer(
-              file: file, mimeType: mimeType, title: title) ??
+            file: file,
+            mimeType: mimeType,
+            title: title,
+          ) ??
           false;
     } on PlatformException {
       vlc = false;
