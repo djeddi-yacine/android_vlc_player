@@ -15,10 +15,10 @@ import org.mockito.Mockito
 
 internal class AndroidVlcPlayerPluginTest {
   @Test
-  fun onMethodCall_getPlatformVersion_returnsExpectedValue() {
+  fun onMethodCall_startVLCPlayer_returnsExpectedValue() {
     val plugin = AndroidVlcPlayerPlugin()
 
-    val call = MethodCall("getPlatformVersion", null)
+    val call = MethodCall("startVLCPlayer", null)
     val mockResult: MethodChannel.Result = Mockito.mock(MethodChannel.Result::class.java)
     plugin.onMethodCall(call, mockResult)
 

@@ -31,7 +31,7 @@
 - application/x-shockwave-flash
 - application/xspf+xml
 - misc/ultravox
-- 
+
 ## Installation
 
 Run This to install the package .

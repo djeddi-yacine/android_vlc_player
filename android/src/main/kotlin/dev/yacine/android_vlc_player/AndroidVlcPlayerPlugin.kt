@@ -4,8 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.content.Context
 
-import androidx.annotation.NonNull
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -17,13 +15,13 @@ class AndroidVlcPlayerPlugin : FlutterPlugin, MethodCallHandler {
   private lateinit var channel: MethodChannel
   private lateinit var applicationContext: Context
 
-  override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     applicationContext = flutterPluginBinding.applicationContext
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "android_vlc_player")
     channel.setMethodCallHandler(this)
   }
 
-  override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+  override fun onMethodCall(call: MethodCall, result: Result) {
     when (call.method) {
       "startVLCPlayer" -> {
         val file = call.argument<String>("file") ?: return result.error("InvalidArguments", "File is null", null)
@@ -45,17 +43,17 @@ class AndroidVlcPlayerPlugin : FlutterPlugin, MethodCallHandler {
     vlcIntent.setDataAndTypeAndNormalize(uri, mimeType)
     vlcIntent.putExtra("title", title)
 
-    try {
+    return try {
       vlcIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
       applicationContext.startActivity(vlcIntent)
-      return true
+      true
     } catch (e: Exception) {
       e.printStackTrace()
-      return false
+      false
     }
   }
 
-  override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
   }
 }
